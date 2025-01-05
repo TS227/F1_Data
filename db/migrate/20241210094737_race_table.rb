@@ -1,10 +1,10 @@
 class RaceTable < ActiveRecord::Migration[8.0]
   def change
-    create_table :races do |t|
-      t.string :race_id, null: false          # raceId
+    create_table :races, id: false do |t|
+      t.integer :race_id, null: false, primary_key: true         # raceId
       t.integer :year                         # year
       t.integer :round                        # round
-      t.string :circuit_id                    # circuitId
+      t.integer :circuit_id                    # circuitId
       t.string :name                          # name
       t.date :date                            # date
       t.time :time                            # time

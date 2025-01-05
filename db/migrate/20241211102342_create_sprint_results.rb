@@ -16,7 +16,7 @@ class CreateSprintResults < ActiveRecord::Migration[8.0]
       t.integer :milliseconds
       t.integer :fastest_lap
       t.string :fastest_lap_time
-      t.string :status_id
+      t.integer :status_id
 
       t.timestamps
     end

@@ -1,7 +1,7 @@
 class CreateCircuits < ActiveRecord::Migration[8.0]
   def change
-    create_table :circuits do |t|
-      t.string :circuit_id, null: false, index: { unique: true }
+    create_table :circuits, id: false do |t|
+      t.integer :circuit_id, null: false, index: { unique: true }, primary_key: true
       t.string :circuit_ref, null: false
       t.string :name, null: false
       t.string :location, null: false

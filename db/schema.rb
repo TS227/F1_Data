@@ -10,12 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_11_103244) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_05_204256) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
-  create_table "circuits", force: :cascade do |t|
-    t.string "circuit_id", null: false
+  create_table "circuits", primary_key: "circuit_id", id: :serial, force: :cascade do |t|
     t.string "circuit_ref", null: false
     t.string "name", null: false
     t.string "location", null: false
@@ -51,8 +50,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_11_103244) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "constructors", force: :cascade do |t|
-    t.integer "constructor_id"
+  create_table "constructors", primary_key: "constructor_id", id: :serial, force: :cascade do |t|
     t.string "constructor_ref"
     t.string "name"
     t.string "nationality"
@@ -73,8 +71,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_11_103244) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "drivers", force: :cascade do |t|
-    t.integer "driver_id"
+  create_table "drivers", primary_key: "driver_id", id: :serial, force: :cascade do |t|
     t.string "driver_ref"
     t.integer "number"
     t.string "code"
@@ -124,11 +121,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_11_103244) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "races", force: :cascade do |t|
-    t.string "race_id", null: false
+  create_table "races", primary_key: "race_id", id: :serial, force: :cascade do |t|
     t.integer "year"
     t.integer "round"
-    t.string "circuit_id"
+    t.integer "circuit_id"
     t.string "name"
     t.date "date"
     t.time "time"
@@ -176,6 +172,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_11_103244) do
     t.string "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["year"], name: "index_seasons_on_year", unique: true
   end
 
   create_table "sprint_results", force: :cascade do |t|
@@ -194,15 +191,38 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_11_103244) do
     t.integer "milliseconds"
     t.integer "fastest_lap"
     t.string "fastest_lap_time"
-    t.string "status_id"
+    t.integer "status_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "statuses", force: :cascade do |t|
-    t.integer "status_id"
+  create_table "statuses", primary_key: "status_id", id: :serial, force: :cascade do |t|
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_foreign_key "constructor_results", "constructors", primary_key: "constructor_id"
+  add_foreign_key "constructor_results", "races", primary_key: "race_id"
+  add_foreign_key "constructor_standings", "constructors", primary_key: "constructor_id"
+  add_foreign_key "constructor_standings", "races", primary_key: "race_id"
+  add_foreign_key "driver_standings", "drivers", primary_key: "driver_id"
+  add_foreign_key "driver_standings", "races", primary_key: "race_id"
+  add_foreign_key "lap_times", "drivers", primary_key: "driver_id"
+  add_foreign_key "lap_times", "races", primary_key: "race_id"
+  add_foreign_key "pit_stops", "drivers", primary_key: "driver_id"
+  add_foreign_key "pit_stops", "races", primary_key: "race_id"
+  add_foreign_key "qualifications", "constructors", primary_key: "constructor_id"
+  add_foreign_key "qualifications", "drivers", primary_key: "driver_id"
+  add_foreign_key "qualifications", "races", primary_key: "race_id"
+  add_foreign_key "races", "circuits", primary_key: "circuit_id"
+  add_foreign_key "races", "seasons", column: "year", primary_key: "year"
+  add_foreign_key "results", "constructors", primary_key: "constructor_id"
+  add_foreign_key "results", "drivers", primary_key: "driver_id"
+  add_foreign_key "results", "races", primary_key: "race_id"
+  add_foreign_key "results", "statuses", primary_key: "status_id"
+  add_foreign_key "sprint_results", "constructors", primary_key: "constructor_id"
+  add_foreign_key "sprint_results", "drivers", primary_key: "driver_id"
+  add_foreign_key "sprint_results", "races", primary_key: "race_id"
+  add_foreign_key "sprint_results", "statuses", primary_key: "status_id"
 end
