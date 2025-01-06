@@ -1,4 +1,4 @@
-namespace :querie do
+namespace :query do
   task lap_times: :environment do
     average_lap_times = Circuit.joins(races: :lap_times)
        .select("circuits.*, AVG(lap_times.milliseconds) AS average_lap_time")
